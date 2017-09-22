@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="../node_modules/c3/c3.min.css" rel="stylesheet"/>
+    <link href="../node_modules/toastr/build/toastr.min.css" rel="stylesheet"/>
+    <link href="../node_modules/d3-tip/examples/example-styles.css" rel="stylesheet"/>
+
+    <style>
+      text {
+        font: 12px sans-serif;
+      }
+      svg {
+        display: block;
+      }
+      html, body, svg {
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+        width: 100%;
+      }
+      .chart-element{
+        margin: 0px;
+        padding: 20px;
+        height: 300px;
+        width: 300px;
+        float: left;
+      }
+    </style>
+
+    <style>
+
+      .bar {
+        fill: steelblue;
+      }
+
+      .bar:hover {
+        fill: brown;
+      }
+
+      .axis--x path {
+        display: none;
+      }
+
+      </style>
+  </head>
+  <body>
+    <script src="../utils.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/d3/build/d3.min.js"></script>
+    <script src="../node_modules/d3-tip/index.js"></script>
+    <script src="../node_modules/toastr/build/toastr.min.js"></script>
+    <script>
+    var chartValues = [
+      {letter: "A", frequency: .08167},
+      {letter: "B", frequency: .01492},
+      {letter: "C", frequency: .02780},
+      {letter: "D", frequency: .04253},
+      {letter: "E", frequency: .12702},
+      {letter: "F", frequency: .02288},
+      {letter: "G", frequency: .02022},
+      {letter: "H", frequency: .06094},
+      {letter: "I", frequency: .06973},
+      {letter: "J", frequency: .00153}
+    ];
+      var rectWidth = 50;
+      chartHeight = 300;
+      $(document).ready(function () {
+
+
+        generateHtmlElements(defaultChartsAmount, true);
+
+        function addGraph(graphId) {
+          var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+              return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
+            })
+          var svg = d3.select('#chart' + graphId + ' svg'),
+            margin = {top: 20, right: 20, bottom: 30, left: 40},
+            width = chartHeight - margin.left - margin.right,
+            height = chartHeight - margin.top - margin.bottom;
+          console.log(+svg.attr("height"));
+          var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+            y = d3.scaleLinear().rangeRound([height, 0]);
+
+          svg.call(tip);
+          var g = svg.append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          x.domain(chartValues.map(function(d) { return d.letter; }));
+          y.domain([0, d3.max(chartValues, function(d) { return d.frequency; })]);
+
+          g.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x));
+
+          g.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(y).ticks(10, "%"))
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", "0.71em")
+            .attr("text-anchor", "end")
+            .text("Frequency");
+
+          g.selectAll(".bar")
+            .data(chartValues)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x(d.letter); })
+            .attr("y", function(d) { return y(d.frequency); })
+            .attr("width", x.bandwidth())
+            .attr("height", function(d) { return height - y(d.frequency); })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
+
+          if (graphId === defaultChartsAmount) {
+            stopChrono(defaultChartsAmount, chartValues.length);
+          }
+        }
+
+        function drawCharts(amount) {
+          startChrono();
+          for (var i = 1; i <= amount; i++) {
+            addGraph(i);
+          }
+        }
+
+        drawCharts(defaultChartsAmount);
+      });
+    </script>
+  </body>
+</html>

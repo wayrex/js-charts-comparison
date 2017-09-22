@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="../node_modules/nvd3/build/nv.d3.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../node_modules/toastr/build/toastr.min.css" rel="stylesheet"/>
+
+    <style>
+      text {
+        font: 12px sans-serif;
+      }
+      svg {
+        display: block;
+      }
+      html, body, svg {
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+        width: 100%;
+      }
+      .chart-element{
+        margin: 0px;
+        padding: 20px;
+        height: 300px;
+        width: 300px;
+        float: left;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="../utils.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/toastr/build/toastr.min.js"></script>
+    <script src="../node_modules/d3/d3.min.js"></script>
+    <script src="../node_modules/nvd3/build/nv.d3.min.js"></script>
+    <script>
+
+      $(document).ready(function () {
+        generateHtmlElements(defaultChartsAmount, true);
+        chartValues = [
+          {
+            key: "Cumulative Return",
+            values: [
+              {
+                "label" : "A" ,
+                "value" : 29.765957771107
+              },
+              {
+                "label" : "B",
+                "value" : 0
+              },
+              {
+                "label" : "C",
+                "value" : 32.807804682612
+              },
+              {
+                "label" : "D",
+                "value" : 196.45946739256
+              },
+              {
+                "label" : "E",
+                "value" : 0.19434030906893
+              },
+              {
+                "label" : "F",
+                "value" : 98.079782601442
+              },
+              {
+                "label" : "G",
+                "value" : 13.925743130903
+              },
+              {
+                "label" : "I",
+                "value" : 55.1387322875705
+              },
+              {
+                "label" : "J",
+                "value" : 3.925743130903
+              },
+              {
+                "label" : "K",
+                "value" : 99.1387322875705
+              }
+            ]
+          }
+        ];
+
+        function addGraph(graphId) {
+          nv.addGraph(function() {
+            var chart = nv.models.discreteBarChart()
+              .x(function(d) { return d.label })
+              .y(function(d) { return d.value })
+              .staggerLabels(true)
+              //.staggerLabels(chartValues[0].values.length > 8)
+              .showValues(true)
+              .duration(10);
+            d3.select('#chart' + graphId + ' svg')
+              .datum(chartValues)
+              .call(chart);
+            nv.utils.windowResize(chart.update);
+
+            if (graphId === defaultChartsAmount) {
+              stopChrono(defaultChartsAmount, chartValues[0].values.length);
+            }
+            return chart;
+          });
+        }
+
+        function drawCharts(amount) {
+          startChrono();
+          for (var i = 0; i <= amount; i++) {
+            addGraph(i);
+          }
+        }
+
+        drawCharts(defaultChartsAmount);
+      });
+    </script>
+  </body>
+</html>

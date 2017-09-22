@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="../node_modules/c3/c3.min.css" rel="stylesheet"/>
+    <link href="../node_modules/toastr/build/toastr.min.css" rel="stylesheet"/>
+
+    <style>
+      text {
+        font: 12px sans-serif;
+      }
+      svg {
+        display: block;
+      }
+      html, body, svg {
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+        width: 100%;
+      }
+      .chart-element{
+        margin: 0px;
+        padding: 20px;
+        height: 300px;
+        width: 300px;
+        float: left;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="../utils.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/d3/d3.min.js"></script>
+    <script src="../node_modules/c3/c3.min.js"></script>
+    <script src="../node_modules/toastr/build/toastr.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        chartValues = [
+            ['data1', 30, 200, 100, 400, 150, 250, 23, 1, 300, 100]
+        ];
+
+        generateHtmlElements(defaultChartsAmount);
+
+        function addGraph(graphId) {
+          c3.generate({
+            bindto: '#chart' + graphId,
+            data: {
+              columns: chartValues,
+              type: 'bar'
+            },
+            bar: {
+              width: {
+                ratio: 0.5 // this makes bar width 50% of length between ticks
+              }
+              // or
+              //width: 100 // this makes bar width 100px
+            }
+          });
+          if (graphId === defaultChartsAmount) {
+            stopChrono(defaultChartsAmount, chartValues[0].length - 1);
+          }
+        }
+
+        function drawCharts(amount) {
+          startChrono();
+          for (var i = 0; i <= amount; i++) {
+            addGraph(i);
+          }
+        }
+
+        drawCharts(defaultChartsAmount);
+      });
+    </script>
+  </body>
+</html>
