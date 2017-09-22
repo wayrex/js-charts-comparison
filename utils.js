@@ -2,7 +2,8 @@ let startTime;
 
 let defaultChartsAmount = 1000;
 function startChrono() {
-  toastr.options.timeOut = 30000;
+  toastr.options.timeOut = 0;
+  toastr.options.extendedTImeout  = 0;
   startTime = new Date().getTime();
 }
 
