@@ -2,6 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <title>C3 Performance Test</title>
+
     <link href="../node_modules/c3/c3.min.css" rel="stylesheet"/>
     <link href="../node_modules/toastr/build/toastr.min.css" rel="stylesheet"/>
 
@@ -41,9 +43,9 @@
 
         generateHtmlElements(defaultChartsAmount);
 
-        function addGraph(graphId) {
+        function addChart(chartId) {
           c3.generate({
-            bindto: '#chart' + graphId,
+            bindto: '#chart' + chartId,
             data: {
               columns: chartValues,
               type: 'bar'
@@ -56,15 +58,15 @@
               //width: 100 // this makes bar width 100px
             }
           });
-          if (graphId === defaultChartsAmount) {
+          if (chartId === defaultChartsAmount) {
             stopChrono(defaultChartsAmount, chartValues[0].length - 1);
           }
         }
 
         function drawCharts(amount) {
           startChrono();
-          for (var i = 0; i <= amount; i++) {
-            addGraph(i);
+          for (var i = 1; i <= amount; i++) {
+            addChart(i);
           }
         }
 
